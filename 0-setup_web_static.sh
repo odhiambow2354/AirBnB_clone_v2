@@ -1,39 +1,23 @@
 #!/usr/bin/env bash
-# Sets up the web servers for the deployment of web_static
+# code creat directory structures install nginx
 
-# Update package lists
-apt update
+if ! which nginx > /dev/null; then
+	sudo apt-get update
+	sudo apt-get -y install nginx
+fi
 
-# Install Nginx
-apt install -y nginx
+sudo mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/
 
-# - Create the folders, if they don't yet exist:
-#   * '/data'
-#   * '/data/web_static/'
-#   * '/data/web_static/releases/'
-#   * '/data/web_static/releases/test/'
-#   * '/data/web_static/shared/'
-mkdir -p /data/web_static/releases/test/
-mkdir -p /data/web_static/shared/
 
-# Create a fake HTML file '/data/web_static/releases/test/index.html',
-# (with simple content, to test Nginx configuration)
-printf "<html>\n\t<head>\n\t</head>\n\t<body>\n\t\tHolberton School\n\t</body>\n</html>\n" | 
-tee /data/web_static/releases/test/index.html 
+sudo echo "<html><head><title> Test page</title></head><body><p> This is a test page. </p></body></html>" | sudo tee /data/web_static/releases/test/index.html
 
-# Create a symbolic link '/data/web_static/current' linked to the
-# '/data/web_static/releases/test/' folder.
-ln -fs /data/web_static/releases/test/ /data/web_static/current
 
-# Give recursive ownership of the '/data/' folder to the 'ubuntu' user AND group
-chown -R ubuntu:ubuntu /data/
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Update the Nginx configuration to serve the content of '/data/web_static/current/'
-# to 'hbnb_static' (ex: https://mydomainname.tech/hbnb_static).
-loc_header="location \/hbnb\_static\/ {"
-loc_content="alias \/data\/web\_static\/current\/;"
-new_location="\n\t$loc_header\n\t\t$loc_content\n\t}\n"
-sed -i "37s/$/$new_location/" /etc/nginx/sites-available/default
+sudo chown -R ubuntu:ubuntu /data/
 
-# Restart Nginx
+sed -i '/listen 80 default_server;/a \ \n    location /hbnb_static {\n        alias /data/web_static/current/;\n        index index.html;\n    }' /etc/nginx/sites-available/default
+
 service nginx restart
