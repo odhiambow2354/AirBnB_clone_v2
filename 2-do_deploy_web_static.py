@@ -3,7 +3,7 @@ from fabric.api import env, run, put
 import os
 # using fabric to automate
 
-env.hosts = ['54.242.117.7', '54.226.19.77']
+env.hosts = ['34.229.69.95', '100.26.215.163']
 env.user = 'ubuntu'
 env.key_filename = '/.ssh'
 
