@@ -1,59 +1,27 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
-"""
-starts a Flask web application
-"""
-
-from flask import Flask, render_template
-from models import *
+""" Starts a Flash Web Application """
 from models import storage
+from models.state import State
+from flask import Flask, render_template
 app = Flask(__name__)
+# app.jinja_env.trim_blocks = True
+# app.jinja_env.lstrip_blocks = True
+
+
+@app.teardown_appcontext
+def close_db(error):
+    """ Remove the current SQLAlchemy Session """
+    storage.close()
 
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """display a HTML page with the states listed in alphabetical order"""
-    states = sorted(list(storage.all("State").values()), key=lambda x: x.name)
+    """ displays a HTML page with a list of states """
+    states = storage.all(State).values()
+    states = sorted(states, key=lambda k: k.name)
     return render_template('7-states_list.html', states=states)
 
 
-@app.teardown_appcontext
-def teardown_db(exception):
-    """closes the storage on teardown"""
-    storage.close()
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
-=======
-"""Starts a Flask web application.
-
-The application listens on 0.0.0.0, port 5000.
-Routes:
-    /states_list: HTML page with a list of all State objects in DBStorage.
-"""
-from models import storage
-from flask import Flask
-from flask import render_template
-
-app = Flask(__name__)
-
-
-@app.route("/states_list", strict_slashes=False)
-def states_list():
-    """Displays an HTML page with a list of all State objects in DBStorage.
-
-    States are sorted by name.
-    """
-    states = storage.all("State")
-    return render_template("7-states_list.html", states=states)
-
-
-@app.teardown_appcontext
-def teardown(exc):
-    """Remove the current SQLAlchemy session."""
-    storage.close()
-
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
->>>>>>> 3be6b736b343528875751ac562c2e09313399515
+    """ Main Function """
+    app.run(host='0.0.0.0', port=5000)

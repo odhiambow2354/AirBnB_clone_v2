@@ -1,9 +1,15 @@
-<<<<<<< HEAD
-# 0x04. AirBnB clone - Web framework
-=======
-# Web Flask
+0x04. AirBnB clone - Web framework
 
-## This was a sub-project within AirBnB in which I began working with Flask
-and Jinja2. In this project, I began integrating the back-end storage engine
-with the web static HTML/CSS pages written earlier.
->>>>>>> 3be6b736b343528875751ac562c2e09313399515
+Objectives
+
+
+    What is a Web Framework
+    How to build a web framework with Flask
+    How to define routes in Flask
+    What is a route
+    How to handle variables in a route
+    What is a template
+    How to create a HTML response in Flask by using a template
+    How to create a dynamic template (loops, conditions…)
+    How to display in HTML data from a MySQL database
+
